@@ -129,6 +129,8 @@ def validate_env():
 # 7. Main Function
 # ----------------------------
 def main():
+    print("Starting AI Podcast Generation...")
+
     load_dotenv()
     validate_env()
 
@@ -161,7 +163,7 @@ def main():
     host_voice_id = voice_map.get(args.host_voice, args.host_voice)
     guest_voice_id = voice_map.get(args.guest_voice, args.guest_voice)
 
-    print("🎙️ Generating script using Grok...")
+    print("🎙️ Generating script using Groq...")
     raw_script = generate_script_with_groq(args.topic)
 
     print("📝 Saving script...")
