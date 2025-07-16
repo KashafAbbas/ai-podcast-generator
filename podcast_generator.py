@@ -183,9 +183,6 @@ def main():
         convert_text_to_audio(text, voice_id, filename)
         audio_files.append(filename)
 
-    if len(dialogue) != 6:
-        raise ValueError("Parsed dialogue must contain exactly 6 lines (3 from host, 3 from guest).")
-
 
     print("🎧 Merging audio...")
     merge_audio_files(audio_files, args.output_audio_file)
