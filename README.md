@@ -1,14 +1,14 @@
 # 🎙️ AI Podcast Generator
 
-The **AI Podcast Generator** is a command-line Python tool that automatically generates a short podcast episode on a given topic using LLMs and text-to-speech synthesis. It creates a script in dialogue format (host and guest), generates voice audio using ElevenLabs, and outputs a complete podcast in MP3 format.
+The **AI Podcast Generator** is a Python tool that automatically generates a podcast episode on a given topic using LLMs and text-to-speech synthesis. It creates a script in dialogue format (host and guest), generates voice audio using ElevenLabs, and outputs a complete podcast in MP3 format.
 
 ---
 
 ## 🚀 Features
 
-- Script generation using **GROQ's LLaMA 3** model  
-- Realistic voice synthesis with **ElevenLabs API**  
-- Support for multiple predefined voice options  
+- Script generation using **GROQ's LLaMA 3** model via API
+- Realistic voice synthesis with **ElevenLabs API**
+- Support for multiple predefined voice options
 - Outputs both:
   - A podcast script (`.txt`)
   - A podcast audio file (`.mp3`)
@@ -28,24 +28,61 @@ The **AI Podcast Generator** is a command-line Python tool that automatically ge
 pip install -r requirements.txt
 ```
 
-<sub>You’ll need the following Python packages: `python-dotenv`, `pydub`, `openai`, `elevenlabs`, and `argparse` (standard library).</sub>
+<sub>Required Python packages: `python-dotenv`, `pydub`, `openai`, `elevenlabs`, and `fastapi` + `uvicorn` for the API.</sub>
 
 ---
 
 ## ⚙️ Usage
 
+### Run from CLI
+
 ```bash
 python podcast_generator.py --topic "Artificial Intelligence in Education"
 ```
 
-### Optional Arguments
+### Run as API
 
-| Argument               | Description                                | Default        |
-|------------------------|--------------------------------------------|----------------|
-| `--output_audio_file`  | Output audio filename                      | `podcast.mp3`  |
-| `--output_script_file` | Output text script filename                | `script.txt`   |
-| `--host_voice`         | Host voice name (e.g. `Aria`)              | `Aria`         |
-| `--guest_voice`        | Guest voice name (e.g. `Daniel`)           | `Daniel`       |
+Start the FastAPI server:
+
+```bash
+uvicorn main_api:app --reload
+```
+
+Send a `POST` request using any API client (e.g. Postman or browser extension) to:
+
+```
+http://127.0.0.1:8000/generate
+```
+
+With the JSON body:
+
+```json
+{
+  "topic": "Future of Renewable Energy",
+  "host_voice": "Sarah",
+  "guest_voice": "George",
+  "output_script_file": "renewable_script.txt",
+  "output_audio_file": "renewable_podcast.mp3"
+}
+```
+
+---
+
+## 🔄 API Endpoint
+
+### `/generate` (POST)
+
+Generate a podcast from a topic and selected voices.
+
+#### Request Body
+
+| Field               | Type   | Required | Description                       |
+|--------------------|--------|----------|-----------------------------------|
+| `topic`            | string | ✅        | Topic of the podcast              |
+| `host_voice`       | string | ❌        | Voice name for the host (default: Aria) |
+| `guest_voice`      | string | ❌        | Voice name for the guest (default: Daniel) |
+| `output_script_file` | string | ❌        | Output text file name (default: script.txt) |
+| `output_audio_file`  | string | ❌        | Output mp3 file name (default: podcast.mp3) |
 
 ---
 
@@ -60,9 +97,9 @@ You can choose from the following voices:
 ## 🧠 How It Works
 
 1. **Generate Script:** Uses the GROQ API to produce a 6-line scripted conversation on the topic (3 lines by the host, 3 by the guest).
-2. **Parse Script:** Separates lines for host and guest to maintain conversational flow.
+2. **Parse Script:** Separates lines for host and guest to maintain dialogue.
 3. **Text-to-Speech:** Converts each line into realistic voice audio using ElevenLabs.
-4. **Merge Audio:** Joins the audio lines in dialogue order and saves them as a podcast.
+4. **Merge Audio:** Joins the audio clips in conversation order and saves them as a podcast.
 
 ---
 
@@ -84,7 +121,7 @@ ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 
 ---
 
-## 📌 Example Command
+## 📌 Example CLI Command
 
 ```bash
 python podcast_generator.py --topic "Climate Change Solutions" --host_voice "Laura" --guest_voice "Will"

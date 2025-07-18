@@ -2,3 +2,6 @@ requests
 elevenlabs
 pydub
 python-dotenv
+fastapi
+uvicorn
+pydantic
